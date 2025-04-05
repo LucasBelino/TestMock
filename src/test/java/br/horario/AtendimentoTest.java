@@ -84,4 +84,40 @@ public class AtendimentoTest {
         assertTrue(resultado.contains("Horário: 17:00"));
         assertTrue(resultado.contains("Período: noturno"));
     }
+
+    @Test
+    void testSalaComLimiteSuperiorPredio5() {
+        when(servicoMock.obterHorarioJSON()).thenReturn(
+                "{ \"nomeDoProfessor\":\"Paulo\", \"horarioDeAtendimento\":\"18:00\", \"periodo\":\"integral\", \"sala\":\"25\", \"predio\":[\"5\"] }");
+
+        String resultado = horarioAtendimento.processarHorario();
+        assertTrue(resultado.contains("Prédio: 5"));
+    }
+
+    @Test
+    void testSalaComLimiteInferiorPredio4() {
+        when(servicoMock.obterHorarioJSON()).thenReturn(
+                "{ \"nomeDoProfessor\":\"Larissa\", \"horarioDeAtendimento\":\"19:00\", \"periodo\":\"noturno\", \"sala\":\"16\", \"predio\":[\"4\"] }");
+
+        String resultado = horarioAtendimento.processarHorario();
+        assertTrue(resultado.contains("Prédio: 4"));
+    }
+
+    @Test
+    void testSalaMedianaPredio3() {
+        when(servicoMock.obterHorarioJSON()).thenReturn(
+                "{ \"nomeDoProfessor\":\"Thiago\", \"horarioDeAtendimento\":\"08:00\", \"periodo\":\"integral\", \"sala\":\"13\", \"predio\":[\"3\"] }");
+
+        String resultado = horarioAtendimento.processarHorario();
+        assertTrue(resultado.contains("Prédio: 3"));
+    }
+
+    @Test
+    void testSala20Predio4() {
+        when(servicoMock.obterHorarioJSON()).thenReturn(
+                "{ \"nomeDoProfessor\":\"Fernanda\", \"horarioDeAtendimento\":\"09:00\", \"periodo\":\"noturno\", \"sala\":\"20\", \"predio\":[\"4\"] }");
+
+        String resultado = horarioAtendimento.processarHorario();
+        assertTrue(resultado.contains("Prédio: 4"));
+    }
 }
