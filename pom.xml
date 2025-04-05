@@ -22,6 +22,7 @@
             <version>5.10.0</version>
             <scope>test</scope>
         </dependency>
+
         <!-- Mockito -->
         <dependency>
             <groupId>org.mockito</groupId>
@@ -29,12 +30,21 @@
             <version>5.2.0</version>
             <scope>test</scope>
         </dependency>
+
         <!-- JSON Parser -->
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20230227</version>
         </dependency>
+
+        <dependency>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy</artifactId>
+            <version>LATEST</version>
+        </dependency>
+
     </dependencies>
+
 
 </project>
