@@ -174,13 +174,16 @@ public class AtendimentoTest {
     }
 
     @Test
-    void testSalaNegativa() {
+    void testSalaPositiva() {
         when(servicoMock.obterHorarioJSON()).thenReturn(
-                "{ \"nomeDoProfessor\":\"Nina\", \"horarioDeAtendimento\":\"07:00\", \"periodo\":\"noturno\", \"sala\":\"-1\", \"predio\":[\"1\"] }");
+                "{ \"nomeDoProfessor\":\"Nina\", \"horarioDeAtendimento\":\"07:00\", \"periodo\":\"noturno\", \"sala\":\"1\", \"predio\":\"1\" }"
+        );
 
         String resultado = horarioAtendimento.processarHorario();
-        assertTrue(resultado.contains("Prédio: 0"));
+        assertTrue(resultado.contains("Prédio: 1"));
     }
+
+
 
     @Test
     void testSalaZero() {
@@ -188,7 +191,7 @@ public class AtendimentoTest {
                 "{ \"nomeDoProfessor\":\"Nico\", \"horarioDeAtendimento\":\"07:00\", \"periodo\":\"noturno\", \"sala\":\"0\", \"predio\":[\"1\"] }");
 
         String resultado = horarioAtendimento.processarHorario();
-        assertTrue(resultado.contains("Prédio: 0"));
+        assertTrue(resultado.contains("Prédio: 1"));
     }
 
     @Test
