@@ -5,8 +5,6 @@ import br.pratico.ServicoRemoto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -119,5 +117,86 @@ public class AtendimentoTest {
 
         String resultado = horarioAtendimento.processarHorario();
         assertTrue(resultado.contains("Prédio: 4"));
+    }
+
+    //TESTES CENÁRIOS DE FALHA
+
+    @Test
+    void testCampoSalaAusente() {
+        when(servicoMock.obterHorarioJSON()).thenReturn(
+                "{ \"nomeDoProfessor\":\"Carlos\", \"horarioDeAtendimento\":\"10:00\", \"periodo\":\"integral\", \"predio\":[\"1\"] }");
+
+        assertThrows(Exception.class, () -> horarioAtendimento.processarHorario());
+    }
+
+    @Test
+    void testSalaNaoNumerica() {
+        when(servicoMock.obterHorarioJSON()).thenReturn(
+                "{ \"nomeDoProfessor\":\"João\", \"horarioDeAtendimento\":\"10:00\", \"periodo\":\"integral\", \"sala\":\"x\", \"predio\":[\"1\"] }");
+
+        assertThrows(NumberFormatException.class, () -> horarioAtendimento.processarHorario());
+    }
+
+    @Test
+    void testJSONVazio() {
+        when(servicoMock.obterHorarioJSON()).thenReturn("{}");
+        assertThrows(Exception.class, () -> horarioAtendimento.processarHorario());
+    }
+
+    @Test
+    void testJSONMalFormado() {
+        when(servicoMock.obterHorarioJSON()).thenReturn("{ nomeDoProfessor: 'Erro' ");
+        assertThrows(Exception.class, () -> horarioAtendimento.processarHorario());
+    }
+
+    @Test
+    void testCampoPeriodoAusente() {
+        when(servicoMock.obterHorarioJSON()).thenReturn(
+                "{ \"nomeDoProfessor\":\"Pedro\", \"horarioDeAtendimento\":\"12:00\", \"sala\":\"3\", \"predio\":[\"1\"] }");
+
+        assertThrows(Exception.class, () -> horarioAtendimento.processarHorario());
+    }
+
+    @Test
+    void testCampoHorarioAusente() {
+        when(servicoMock.obterHorarioJSON()).thenReturn(
+                "{ \"nomeDoProfessor\":\"Lucas\", \"periodo\":\"noturno\", \"sala\":\"2\", \"predio\":[\"1\"] }");
+
+        assertThrows(Exception.class, () -> horarioAtendimento.processarHorario());
+    }
+
+    @Test
+    void testCampoNomeAusente() {
+        when(servicoMock.obterHorarioJSON()).thenReturn(
+                "{ \"horarioDeAtendimento\":\"11:00\", \"periodo\":\"integral\", \"sala\":\"4\", \"predio\":[\"1\"] }");
+
+        assertThrows(Exception.class, () -> horarioAtendimento.processarHorario());
+    }
+
+    @Test
+    void testSalaNegativa() {
+        when(servicoMock.obterHorarioJSON()).thenReturn(
+                "{ \"nomeDoProfessor\":\"Nina\", \"horarioDeAtendimento\":\"07:00\", \"periodo\":\"noturno\", \"sala\":\"-1\", \"predio\":[\"1\"] }");
+
+        String resultado = horarioAtendimento.processarHorario();
+        assertTrue(resultado.contains("Prédio: 0"));
+    }
+
+    @Test
+    void testSalaZero() {
+        when(servicoMock.obterHorarioJSON()).thenReturn(
+                "{ \"nomeDoProfessor\":\"Nico\", \"horarioDeAtendimento\":\"07:00\", \"periodo\":\"noturno\", \"sala\":\"0\", \"predio\":[\"1\"] }");
+
+        String resultado = horarioAtendimento.processarHorario();
+        assertTrue(resultado.contains("Prédio: 0"));
+    }
+
+    @Test
+    void testPredioArrayAusente() {
+        when(servicoMock.obterHorarioJSON()).thenReturn(
+                "{ \"nomeDoProfessor\":\"Silvia\", \"horarioDeAtendimento\":\"12:00\", \"periodo\":\"integral\", \"sala\":\"1\" }");
+
+        String resultado = horarioAtendimento.processarHorario();
+        assertTrue(resultado.contains("Prédio: 1"));
     }
 }
